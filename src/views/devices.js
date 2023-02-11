@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import MediaCard from "../components/mediaCard";
+import "./devices.css";
 
 export default function Devices() {
   const [searchParams] = useSearchParams();
@@ -19,24 +21,10 @@ export default function Devices() {
         let deviceArr = [];
         res.data.data.devices.forEach((device) => {
           if (device.controllable) {
-            deviceArr.push(
-              <div>
-                MAC: {device.device}
-                <br />
-                Model: {device.model}
-                <br />
-                Name: {device.deviceName}
-                <br /> <br />
-                {/* Properties: {device.properties}
-                <br />
-                supportCmds: {device.supportCmds}
-                <br /> */}
-              </div>
-            );
+            deviceArr.push(<MediaCard data={device} />);
           }
         });
         setDevices(deviceArr);
-        console.log(res.data.data.devices);
         setState("Success");
       })
       .catch((err) => {
@@ -52,7 +40,9 @@ export default function Devices() {
       {status === "Error" && (
         <div>Error getting projects. Please check back later.</div>
       )}
-      {status === "Success" && <div>{devices.map((device) => device)}</div>}
+      {status === "Success" && (
+        <div className="device-cards">{devices.map((device) => device)}</div>
+      )}
     </div>
   );
 }
