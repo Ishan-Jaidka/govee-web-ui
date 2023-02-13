@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +11,13 @@ export default function PageNotFound() {
         <div className="page-description">
           It may be in development. Please try again later.
         </div>
-        <button onClick={() => navigate("/")}>Home</button>
+        <Button
+          size="medium"
+          sx={{ backgroundColor: "white" }}
+          onClick={() => navigate("/")}
+        >
+          Home
+        </Button>
       </header>
     </div>
   );

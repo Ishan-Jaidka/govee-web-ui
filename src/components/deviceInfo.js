@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useGoveeKey } from "../contexts/GoveeKeyContext";
@@ -56,9 +57,21 @@ export default function DeviceInfo({
           </tr>
         </table>
       </div>
-      <div>
-        <button onClick={() => deviceOn(true)}>Turn On</button>
-        <button onClick={() => deviceOn(false)}>Turn Off</button>
+      <div className="deviceinfo-controldiv">
+        <Button
+          size="medium"
+          sx={{ backgroundColor: "white", margin: "2vmin", marginTop: "5vmin" }}
+          onClick={() => deviceOn(true)}
+        >
+          Turn On
+        </Button>
+        <Button
+          size="medium"
+          sx={{ backgroundColor: "white", margin: "2vmin", marginTop: "5vmin" }}
+          onClick={() => deviceOn(false)}
+        >
+          Turn Off
+        </Button>
       </div>
     </div>
   );

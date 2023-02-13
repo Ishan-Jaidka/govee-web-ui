@@ -1,6 +1,8 @@
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from "../components/backButton";
 import DeviceInfo from "../components/deviceInfo";
 import { useGoveeKey } from "../contexts/GoveeKeyContext";
 
@@ -48,6 +50,7 @@ export default function DevicePage() {
   return (
     <div className="App">
       <header className="App-header">
+        <BackButton />
         <h1>{state.deviceName}</h1>
         <div>Mac Address: {state.device}</div>
         <div>Model: {state.model}</div>
@@ -64,7 +67,13 @@ export default function DevicePage() {
             <br />
             <br />
             <h3>Something went wrong. Please try again.</h3>
-            <button onClick={() => navigate("/")}>Home</button>
+            <Button
+              size="medium"
+              sx={{ backgroundColor: "white" }}
+              onClick={() => navigate("/")}
+            >
+              Home
+            </Button>
           </>
         )}
       </header>

@@ -1,6 +1,8 @@
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/backButton";
 import MediaCard from "../components/mediaCard";
 import { useGoveeKey } from "../contexts/GoveeKeyContext";
 import "./devices.css";
@@ -45,6 +47,7 @@ export default function Devices() {
   return (
     <div className="App">
       <header className="App-header">
+        <BackButton />
         <h2>Devices for:</h2>
         <p>{goveeKey}</p>
         {status === "Loading" && <div>Loading...</div>}
@@ -57,13 +60,25 @@ export default function Devices() {
         {status === "Unauthorized" && (
           <div>
             <h3>Invalid API Key. Please enter a valid API key.</h3>
-            <button onClick={() => navigate("/")}>Home</button>
+            <Button
+              size="medium"
+              sx={{ backgroundColor: "white" }}
+              onClick={() => navigate("/")}
+            >
+              Home
+            </Button>
           </div>
         )}
         {status === "Empty" && (
           <div>
             <h3>There are no available devices on that account.</h3>
-            <button onClick={() => navigate("/")}>Home</button>
+            <Button
+              size="medium"
+              sx={{ backgroundColor: "white" }}
+              onClick={() => navigate("/")}
+            >
+              Home
+            </Button>
           </div>
         )}
         {status === "Success" && (
