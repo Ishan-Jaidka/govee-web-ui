@@ -25,6 +25,7 @@ export default function Home() {
             id="api-key"
             label="API Key"
             variant="filled"
+            sx={{ backgroundColor: "white" }}
             onChange={(event) => {
               setApiKey(event.target.value);
             }}
