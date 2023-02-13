@@ -1,0 +1,18 @@
+.deviceinfo-outerdiv {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 5vh;
+  flex-direction: column;
+}
+
+th,
+td {
+  padding-left: 2vmin;
+  padding-right: 2vmin;
+}
+
+button {
+  margin: 2vmin;
+  margin-top: 5vmin;
+}
