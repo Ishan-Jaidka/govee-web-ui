@@ -38,18 +38,20 @@ export default function Devices() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div>
-      <div>Devices for: {goveeKey}</div>
-      {status === "Loading" && <div>Loading...</div>}
-      {status === "Error" && (
-        <div>
-          <h3>Error getting devices. Please try again later.</h3>
-          <button onClick={() => navigate("/")}>Home</button>
-        </div>
-      )}
-      {status === "Success" && (
-        <div className="device-cards">{devices.map((device) => device)}</div>
-      )}
+    <div className="App">
+      <header className="App-header">
+        <div>Devices for: {goveeKey}</div>
+        {status === "Loading" && <div>Loading...</div>}
+        {status === "Error" && (
+          <div>
+            <h3>Error getting devices. Please try again later.</h3>
+            <button onClick={() => navigate("/")}>Home</button>
+          </div>
+        )}
+        {status === "Success" && (
+          <div className="device-cards">{devices.map((device) => device)}</div>
+        )}
+      </header>
     </div>
   );
 }

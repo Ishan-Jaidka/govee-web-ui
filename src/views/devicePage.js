@@ -47,26 +47,28 @@ export default function DevicePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div>
-      <h1>{state.deviceName}</h1>
-      <div>Mac Address: {state.device}</div>
-      <div>Model: {state.model}</div>
-      {status === "Success" && <div>{deviceInfo}</div>}
-      {status === "Loading" && (
-        <div>
-          <br />
-          <br />
-          Loading...
-        </div>
-      )}
-      {status === "Error" && (
-        <>
-          <br />
-          <br />
-          <h3>Something went wrong. Please try again.</h3>
-          <button onClick={() => navigate("/")}>Home</button>
-        </>
-      )}
+    <div className="App">
+      <header className="App-header">
+        <h1>{state.deviceName}</h1>
+        <div>Mac Address: {state.device}</div>
+        <div>Model: {state.model}</div>
+        {status === "Success" && <div>{deviceInfo}</div>}
+        {status === "Loading" && (
+          <div>
+            <br />
+            <br />
+            Loading...
+          </div>
+        )}
+        {status === "Error" && (
+          <>
+            <br />
+            <br />
+            <h3>Something went wrong. Please try again.</h3>
+            <button onClick={() => navigate("/")}>Home</button>
+          </>
+        )}
+      </header>
     </div>
   );
 }
