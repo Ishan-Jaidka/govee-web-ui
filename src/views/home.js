@@ -1,15 +1,18 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGoveeKeyUpdate } from "../contexts/GoveeKeyContext";
 import "./home.css";
 
 export default function Home() {
   const navigate = useNavigate();
   const [apiKey, setApiKey] = useState("");
 
+  const setGoveeKey = useGoveeKeyUpdate();
+
   const submitButton = () => {
-    console.log(document.getElementById("api-key"));
-    navigate({ pathname: "devices", search: `?key=${apiKey}` });
+    setGoveeKey(apiKey);
+    navigate("devices");
   };
   return (
     <div className="App">

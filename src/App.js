@@ -1,11 +1,14 @@
 import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import { router } from "./components/router";
+import { GoveeKeyProvider } from "./contexts/GoveeKeyContext";
 
 function App() {
   return (
     <div className="App">
-      <RouterProvider router={router} />
+      <GoveeKeyProvider>
+        <RouterProvider router={router} />
+      </GoveeKeyProvider>
     </div>
   );
 }

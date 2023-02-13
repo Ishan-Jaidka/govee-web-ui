@@ -1,17 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MediaCard from "../components/mediaCard";
+import { useGoveeKey } from "../contexts/GoveeKeyContext";
 import "./devices.css";
 
 export default function Devices() {
-  const [searchParams] = useSearchParams();
   const [devices, setDevices] = useState([]);
-  const [status, setState] = useState("Loading");
+  const [status, setStatus] = useState("Loading");
+  const navigate = useNavigate();
+
+  const goveeKey = useGoveeKey();
+
   useEffect(() => {
     const config = {
       headers: {
-        "Govee-API-Key": searchParams.get("key"),
+        "Govee-API-Key": goveeKey,
       },
     };
     axios
@@ -25,20 +29,23 @@ export default function Devices() {
           }
         });
         setDevices(deviceArr);
-        setState("Success");
+        setStatus("Success");
       })
       .catch((err) => {
-        setState("Error");
+        setStatus("Error");
         console.log(err);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
-      <div>Devices for {searchParams.get("key")}</div>
+      <div>Devices for: {goveeKey}</div>
       {status === "Loading" && <div>Loading...</div>}
       {status === "Error" && (
-        <div>Error getting projects. Please check back later.</div>
+        <div>
+          <h3>Error getting devices. Please try again later.</h3>
+          <button onClick={() => navigate("/")}>Home</button>
+        </div>
       )}
       {status === "Success" && (
         <div className="device-cards">{devices.map((device) => device)}</div>
