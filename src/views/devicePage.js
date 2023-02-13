@@ -23,7 +23,6 @@ export default function DevicePage() {
         config
       )
       .then((data) => {
-        // console.log(data.data.data.properties);
         if (data.status === 200) {
           const deviceProperties = data.data.data.properties;
           const device = (

@@ -23,28 +23,46 @@ export default function Devices() {
       .then((res) => {
         if (res.status !== 200) throw new Error(res.statusText);
         let deviceArr = [];
-        res.data.data.devices.forEach((device) => {
-          if (device.controllable) {
-            deviceArr.push(<MediaCard data={device} />);
-          }
-        });
-        setDevices(deviceArr);
-        setStatus("Success");
+        if (res.data.data.devices) {
+          res.data.data.devices.forEach((device) => {
+            if (device.controllable) {
+              deviceArr.push(<MediaCard data={device} />);
+            }
+          });
+          setDevices(deviceArr);
+          setStatus("Success");
+        } else setStatus("Empty");
       })
       .catch((err) => {
-        setStatus("Error");
-        console.log(err);
+        if (err.response?.status === 401) setStatus("Unauthorized");
+        else {
+          setStatus("Error");
+          console.log(err);
+        }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="App">
       <header className="App-header">
-        <div>Devices for: {goveeKey}</div>
+        <h2>Devices for:</h2>
+        <p>{goveeKey}</p>
         {status === "Loading" && <div>Loading...</div>}
         {status === "Error" && (
           <div>
             <h3>Error getting devices. Please try again later.</h3>
+            <button onClick={() => navigate("/")}>Home</button>
+          </div>
+        )}
+        {status === "Unauthorized" && (
+          <div>
+            <h3>Invalid API Key. Please enter a valid API key.</h3>
+            <button onClick={() => navigate("/")}>Home</button>
+          </div>
+        )}
+        {status === "Empty" && (
+          <div>
+            <h3>There are no available devices on that account.</h3>
             <button onClick={() => navigate("/")}>Home</button>
           </div>
         )}
