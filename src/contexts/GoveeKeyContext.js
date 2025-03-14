@@ -1,7 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
 const GoveeKeyContext = createContext();
-
 const UpdateGoveeKeyContext = createContext();
 
 export function useGoveeKey() {
@@ -13,10 +12,14 @@ export function useGoveeKeyUpdate() {
 }
 
 export function GoveeKeyProvider({ children }) {
-  const [goveeKey, setGoveeKey] = useState(null);
+  // Load initial state from sessionStorage
+  const [goveeKey, setGoveeKey] = useState(() => {
+    return sessionStorage.getItem("goveeKey") || null;
+  });
 
   function setKey(key) {
     setGoveeKey(key);
+    sessionStorage.setItem("goveeKey", key); // Save to sessionStorage
   }
 
   return (
