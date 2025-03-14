@@ -17,7 +17,7 @@ export default function DeviceInfo({
   const [bright, setBrightness] = useState(brightness);
   const debounceRef = useRef(null);
 
-  function deviceOn(on) {
+  const sendCommand = (cmd) => {
     const config = {
       headers: {
         "Govee-API-Key": goveeKey,
@@ -26,13 +26,17 @@ export default function DeviceInfo({
     const body = {
       device: mac,
       model: model,
-      cmd: {
-        name: "turn",
-        value: on ? "on" : "off",
-      },
+      cmd: cmd,
     };
-    axios
-      .put("https://developer-api.govee.com/v1/devices/control", body, config)
+    return axios.put(
+      "https://developer-api.govee.com/v1/devices/control",
+      body,
+      config
+    );
+  };
+
+  const deviceOn = (on) => {
+    sendCommand({ name: "turn", value: on ? "on" : "off" })
       .then((data) => {
         if (data.status === 200) setPower(on ? "on" : "off");
       })
@@ -40,25 +44,12 @@ export default function DeviceInfo({
         alert("Something went wrong. Please try again later.");
         console.error(err);
       });
-  }
-  function brightnessChanged(val) {
+  };
+
+  const brightnessChanged = (val) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      const config = {
-        headers: {
-          "Govee-API-Key": goveeKey,
-        },
-      };
-      const body = {
-        device: mac,
-        model: model,
-        cmd: {
-          name: "brightness",
-          value: val,
-        },
-      };
-      axios
-        .put("https://developer-api.govee.com/v1/devices/control", body, config)
+      sendCommand({ name: "brightness", value: val })
         .then((data) => {
           if (data.status === 200) setBrightness(val);
         })
@@ -67,23 +58,28 @@ export default function DeviceInfo({
           console.error(err);
         });
     }, 1000);
-  }
+  };
+
   return (
     <div className="deviceinfo-outerdiv">
       <div>
         <table>
-          <tr>
-            <th>Online</th>
-            <th>Power</th>
-            {colorTem && <th>Color</th>}
-            {brightness && <th>Brightness</th>}
-          </tr>
-          <tr>
-            <td>{online.toString()}</td>
-            <td>{power}</td>
-            {colorTem && <td>{colorTem}</td>}
-            {brightness && <td>{bright}</td>}
-          </tr>
+          <thead>
+            <tr>
+              <th>Online</th>
+              <th>Power</th>
+              {colorTem && <th>Temperature</th>}
+              {brightness && <th>Brightness</th>}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{online.toString()}</td>
+              <td>{power}</td>
+              {colorTem && <td>{colorTem}</td>}
+              {brightness && <td>{bright}</td>}
+            </tr>
+          </tbody>
         </table>
       </div>
       {brightness && (
