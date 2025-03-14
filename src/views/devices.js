@@ -40,6 +40,8 @@ export default function Devices() {
         else {
           setStatus("Error");
           console.error(err);
+          sessionStorage.removeItem("goveeKey");
+          navigate("/");
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps

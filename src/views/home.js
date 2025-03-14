@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGoveeKeyUpdate } from "../contexts/GoveeKeyContext";
 import "./home.css";
@@ -14,6 +14,11 @@ export default function Home() {
     setGoveeKey(apiKey);
     navigate("devices");
   };
+
+  useEffect(() => {
+    if (sessionStorage.getItem("goveeKey")) navigate("devices");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
   return (
     <div className="App">
       <header className="App-header">
