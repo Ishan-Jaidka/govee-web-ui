@@ -39,7 +39,7 @@ export default function Devices() {
         if (err.response?.status === 401) setStatus("Unauthorized");
         else {
           setStatus("Error");
-          console.log(err);
+          console.error(err);
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps

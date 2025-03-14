@@ -41,7 +41,7 @@ export default function MediaCard({
       })
       .catch((err) => {
         alert("Something went wrong. Please try again later.");
-        console.log(err);
+        console.error(err);
       });
   }
 

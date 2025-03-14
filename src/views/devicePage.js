@@ -42,7 +42,7 @@ export default function DevicePage() {
         } else setStatus("Error");
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         setStatus("Error");
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
