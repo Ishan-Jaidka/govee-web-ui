@@ -7,7 +7,6 @@ import "./home.css";
 export default function Home() {
   const navigate = useNavigate();
   const [apiKey, setApiKey] = useState("");
-
   const setGoveeKey = useGoveeKeyUpdate();
 
   const submitButton = () => {
@@ -18,7 +17,8 @@ export default function Home() {
   useEffect(() => {
     if (sessionStorage.getItem("goveeKey")) navigate("devices");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -31,9 +31,7 @@ export default function Home() {
             label="API Key"
             variant="filled"
             sx={{ backgroundColor: "white" }}
-            onChange={(event) => {
-              setApiKey(event.target.value);
-            }}
+            onChange={(event) => setApiKey(event.target.value)}
           />
           <br />
           <Button

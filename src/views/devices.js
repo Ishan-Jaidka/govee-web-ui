@@ -6,86 +6,100 @@ import BackButton from "../components/backButton";
 import MediaCard from "../components/mediaCard";
 import { useGoveeKey } from "../contexts/GoveeKeyContext";
 import "./devices.css";
+import SwitchUserButton from "../components/switchUserButton";
 
 export default function Devices() {
   const [devices, setDevices] = useState([]);
   const [status, setStatus] = useState("Loading");
   const navigate = useNavigate();
-
   const goveeKey = useGoveeKey();
 
   useEffect(() => {
-    const config = {
-      headers: {
-        "Govee-API-Key": goveeKey,
-      },
-    };
-    axios
-      .get("https://developer-api.govee.com/v1/devices", config)
-      .then((res) => {
+    const fetchDevices = async () => {
+      try {
+        const config = { headers: { "Govee-API-Key": goveeKey } };
+        const res = await axios.get(
+          "https://developer-api.govee.com/v1/devices",
+          config
+        );
         if (res.status !== 200) throw new Error(res.statusText);
-        let deviceArr = [];
-        if (res.data.data.devices) {
-          res.data.data.devices.forEach((device) => {
-            if (device.controllable) {
-              deviceArr.push(<MediaCard data={device} />);
-            }
-          });
-          setDevices(deviceArr);
-          setStatus("Success");
-        } else setStatus("Empty");
-      })
-      .catch((err) => {
-        if (err.response?.status === 401) setStatus("Unauthorized");
-        else {
-          setStatus("Error");
-          console.error(err);
+
+        const deviceArr =
+          res.data.data.devices
+            ?.filter((device) => device.controllable)
+            .map((device) => <MediaCard data={device} />) || [];
+        setDevices(deviceArr);
+        setStatus(deviceArr.length ? "Success" : "Empty");
+      } catch (err) {
+        handleFetchError(err);
+      }
+    };
+
+    const handleFetchError = (err) => {
+      if (err.response?.status === 401) setStatus("Unauthorized");
+      else if (err.response?.status === 429) setStatus("Rate Limit Exceeded");
+      else {
+        setStatus("Error");
+        console.error(err);
+        sessionStorage.removeItem("goveeKey");
+        navigate("/");
+      }
+    };
+
+    fetchDevices();
+  }, [goveeKey, navigate]);
+
+  const renderStatusMessage = () => {
+    switch (status) {
+      case "Loading":
+        return <div>Loading...</div>;
+      case "Error":
+        return renderErrorMessage(
+          "Error getting devices. Please try again later."
+        );
+      case "Unauthorized":
+        return renderErrorMessage(
+          "Invalid API Key. Please enter a valid API key."
+        );
+      case "Empty":
+        return renderErrorMessage(
+          "There are no available devices on that account."
+        );
+      case "Rate Limit Exceeded":
+        return renderErrorMessage(
+          "Rate Limit Exceeded, please try again later"
+        );
+      case "Success":
+        return <div className="device-cards">{devices}</div>;
+      default:
+        return null;
+    }
+  };
+
+  const renderErrorMessage = (message) => (
+    <div>
+      <h3>{message}</h3>
+      <Button
+        size="medium"
+        sx={{ backgroundColor: "white" }}
+        onClick={() => {
           sessionStorage.removeItem("goveeKey");
           navigate("/");
-        }
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+        }}
+      >
+        Home
+      </Button>
+    </div>
+  );
+
   return (
     <div className="App">
       <header className="App-header">
         <BackButton />
+        <SwitchUserButton />
         <h2>Devices for:</h2>
         <p>{goveeKey}</p>
-        {status === "Loading" && <div>Loading...</div>}
-        {status === "Error" && (
-          <div>
-            <h3>Error getting devices. Please try again later.</h3>
-            <button onClick={() => navigate("/")}>Home</button>
-          </div>
-        )}
-        {status === "Unauthorized" && (
-          <div>
-            <h3>Invalid API Key. Please enter a valid API key.</h3>
-            <Button
-              size="medium"
-              sx={{ backgroundColor: "white" }}
-              onClick={() => navigate("/")}
-            >
-              Home
-            </Button>
-          </div>
-        )}
-        {status === "Empty" && (
-          <div>
-            <h3>There are no available devices on that account.</h3>
-            <Button
-              size="medium"
-              sx={{ backgroundColor: "white" }}
-              onClick={() => navigate("/")}
-            >
-              Home
-            </Button>
-          </div>
-        )}
-        {status === "Success" && (
-          <div className="device-cards">{devices.map((device) => device)}</div>
-        )}
+        {renderStatusMessage()}
       </header>
     </div>
   );
