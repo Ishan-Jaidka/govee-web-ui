@@ -31,7 +31,7 @@ export default function DeviceInfo({
     return axios.put(
       "https://developer-api.govee.com/v1/devices/control",
       body,
-      config
+      config,
     );
   };
 
@@ -86,7 +86,7 @@ export default function DeviceInfo({
         <Box sx={{ width: 1 }}>
           <Slider
             defaultValue={bright}
-            step={5}
+            step={1}
             valueLabelDisplay="on"
             onChange={(e, val) => brightnessChanged(val)}
           />
